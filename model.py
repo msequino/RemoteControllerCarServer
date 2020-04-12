@@ -1,4 +1,5 @@
 
+from gpio import Gpio
 
 class MessagePayload:
 	def __init__(self, action, timestamp):
@@ -26,7 +27,7 @@ class MessagePayload:
 		return MessagePayload(action, timestamp)
 
 	def execute(self):
-		print("executing " + self.action + ", ts " + self.timestamp)
+		print("executing " + self.action.type + ", ts " + self.timestamp)
 		self.action.execute()
 		return True
 
@@ -38,11 +39,13 @@ class Throttle:
 
 	def execute(self):
 		print("executing throttle command")
+		Gpio.throttle(self.x, self.y)
 
 class SlowDown:
 	type = "SlowDown"
 	def execute(self):
 		print("executing slowdown command")
+		Gpio.slowdown()
 
 class Reverse:
 	type = "Reverse"
@@ -52,6 +55,7 @@ class Reverse:
 
 	def execute(self):
 		print("executing reverse command")
+		Gpio.reverse(self.x, self.y)
 
 class Steer:
 	type = "Steer"
@@ -61,4 +65,5 @@ class Steer:
 
 	def execute(self):
 		print("executing steer command")
+		Gpio.steer(self.x, self.y)
 

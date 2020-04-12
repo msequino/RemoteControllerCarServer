@@ -3,7 +3,7 @@
 from enum import Enum
 import bluetooth
 
-import model
+from model import MessagePayload
 
 class SocketState(Enum):
 	OPENED = 1
@@ -35,11 +35,14 @@ def main():
 				print("receiving message")
 				data = client_sock.recv(1024)
 				print("received [%s]" % data)
-				if data == "CLOSE_CONNECTION":
-					socketState = SocketState.CLOSED
+				if data == None:
+					print("invalid message")
 				else:
-					message = MessagePayload.builder(data)
-					message.execute()
+					_data = data.decode("utf-8")
+					if _data == "CLOSE_CONNECTION":
+						socketState = SocketState.CLOSED
+					else:
+						MessagePayload.builder(_data).execute()
 					
 			except bluetooth.btcommon.BluetoothError as ex:
 				print( ex )
